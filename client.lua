@@ -32,9 +32,12 @@ local function RemoveBmxFromScene(entity)
   NetworkRegisterEntityAsNetworked(entity)
   Wait(100)
   NetworkRequestControlOfEntity(entity)
+  Wait(100)
   SetEntityAsMissionEntity(entity)
   Wait(100)
   DeleteEntity(entity)
+  Wait(100)
+  return DoesEntityExist(entity)
 end
 
 RegisterNetEvent('pp2-pickupbmx:client:fetchBMX', function(bmxEntity)
@@ -46,9 +49,12 @@ RegisterNetEvent('pp2-pickupbmx:client:fetchBMX', function(bmxEntity)
     local plate = GetVehicleNumberPlateText(bmxEntity)
     LoadThaAnim('anim@mp_snowball')
     TaskPlayAnim(playerPed, 'anim@mp_snowball', 'pickup_snowball', 8.0, 8.0, -1, 48, 1, false, false, false)
-    TriggerServerEvent('pp2-pickupbmx:server:StoreBMX', 'bmx', colorPrimary, colorSecondary, perl, plate)
-    RemoveBmxFromScene(bmxEntity)
-    Wait(1000)
+    if RemoveBmxFromScene(bmxEntity) then
+      TriggerServerEvent('pp2-pickupbmx:server:StoreBMX', 'bmx', colorPrimary, colorSecondary, perl, plate)
+      Wait(1000)
+    else
+      QBCore.Functions.Notify('Cant pick up bmx!!!', 'error', 5000)
+    end
   else
     QBCore.Functions.Notify('You already have a bike on you.', 'error', 5000)
   end
