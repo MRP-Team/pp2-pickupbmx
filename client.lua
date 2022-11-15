@@ -35,9 +35,12 @@ local function RemoveBmxFromScene(entity)
   Wait(100)
   SetEntityAsMissionEntity(entity)
   Wait(100)
-  DeleteEntity(entity)
-  Wait(100)
-  return DoesEntityExist(entity)
+  if DoesEntityExist(entity) then
+    DeleteEntity(entity)
+    Wait(100)
+    return not DoesEntityExist(entity)
+  end
+  return false
 end
 
 RegisterNetEvent('pp2-pickupbmx:client:fetchBMX', function(bmxEntity)
